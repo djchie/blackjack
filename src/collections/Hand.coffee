@@ -7,6 +7,13 @@ class window.Hand extends Backbone.Collection
     @add(@deck.pop())
     @last()
 
+  stand: -> @trigger 'stand', @
+  
+  dealerPlay: -> 
+    @forEach (card) -> 
+      card.flip() if not card.get('revealed')
+    scores = @scores
+      
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1

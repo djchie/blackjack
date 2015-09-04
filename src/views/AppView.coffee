@@ -8,9 +8,13 @@ class window.AppView extends Backbone.View
   events:
     'click .hit-button': -> @model.get('playerHand').hit()
     'click .stand-button': -> @model.get('playerHand').stand()
+    
 
   initialize: ->
     @render()
+    @model.on 'change:gameOver', (model) -> 
+      winner = @model.get 'winner'
+      @$el.html("<div>#{winner} won!</div>")
 
   render: ->
     @$el.children().detach()
