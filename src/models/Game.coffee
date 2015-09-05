@@ -1,16 +1,9 @@
 class window.Game extends Backbone.Model 
   initialize: ->
     @set 'deck', deck = new Deck()
-    @set 'playerHand', deck.dealPlayer()
-    @set 'dealerHand', deck.dealDealer()
+    @newGame()
 
-
-    @get('playerHand').on 'stand', @get('dealerHand').dealerPlay, @get('dealerHand')
-
-    @get('playerHand').on 'gameEnd', @determineWinner, @
-    @get('dealerHand').on 'gameEnd', @determineWinner, @
-
-    @checkForBlkJk()
+    
 
   defaults: 
     gameOver: false
@@ -70,7 +63,20 @@ class window.Game extends Backbone.Model
 
     console.log("blkjk: " + @get('gameOver') + " winner: " + @get('winner'))  
   
+  newGame: ->
+    if @get('deck').models.length < 11
+      @set 'deck', new Deck()
 
+    @set 'gameOver', false
+    @set 'winner', null
+    @set 'playerHand', @get('deck').dealPlayer()
+    @set 'dealerHand', @get('deck').dealDealer()
+    @get('playerHand').on 'stand', @get('dealerHand').dealerPlay, @get('dealerHand')
+    @get('playerHand').on 'gameEnd', @determineWinner, @
+    @get('dealerHand').on 'gameEnd', @determineWinner, @
+    @checkForBlkJk()
+    @trigger 'newGame', @
+    console.log 'New game created'
     
       
 

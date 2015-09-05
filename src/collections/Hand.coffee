@@ -22,6 +22,7 @@ class window.Hand extends Backbone.Collection
     while scores[0] < 17 || scores[1] < 17
       @hit()
       scores = @scores()
+
     @trigger 'gameEnd', @ 
     
 
