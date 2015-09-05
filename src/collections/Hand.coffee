@@ -14,10 +14,13 @@ class window.Hand extends Backbone.Collection
 
   stand: -> @trigger 'stand', @
   
-  dealerPlay: -> 
+  revealCards: ->
     _.each @models, (card) -> 
       card.flip() if not card.get('revealed')
     , @
+
+  dealerPlay: -> 
+    @revealCards()
     scores = @scores()
     while scores[0] < 17 || scores[1] < 17
       @hit()

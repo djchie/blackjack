@@ -49,17 +49,23 @@ class window.Game extends Backbone.Model
 
   checkForBlkJk: -> 
     dealerBJ = @get('dealerHand').hasAce() and @get('dealerHand').cardValuesSum() == 11
-    playerBJ = @get('playerHand').hasAce() and @get('dealerHand').cardValuesSum() == 11
+    playerBJ = @get('playerHand').hasAce() and @get('playerHand').cardValuesSum() == 11
 
     if (playerBJ and dealerBJ)
       @set 'winner', 'push'
+      @get('dealerHand').revealCards()
       @set 'gameOver', true
+      @trigger 'gameEnd', @
     else if (playerBJ)
       @set 'winner', 'player'
+      @get('dealerHand').revealCards()
       @set 'gameOver', true
+      @trigger 'gameEnd', @
     else if (dealerBJ)
-      @set 'winner', 'dealer'  
+      @set 'winner', 'dealer' 
+      @get('dealerHand').revealCards()
       @set 'gameOver', true
+      @trigger 'gameEnd', @
 
     console.log("blkjk: " + @get('gameOver') + " winner: " + @get('winner'))  
   
@@ -74,9 +80,9 @@ class window.Game extends Backbone.Model
     @get('playerHand').on 'stand', @get('dealerHand').dealerPlay, @get('dealerHand')
     @get('playerHand').on 'gameEnd', @determineWinner, @
     @get('dealerHand').on 'gameEnd', @determineWinner, @
-    @checkForBlkJk()
     @trigger 'newGame', @
     console.log 'New game created'
+    @checkForBlkJk()
     
       
 

@@ -12,7 +12,7 @@ class window.AppView extends Backbone.View
     
 
   initialize: ->
-    @render()
+    
 
     @model.get('game').on 'change:gameOver', (model) -> 
       @$('.hit-button').prop('disabled', true)
@@ -24,6 +24,8 @@ class window.AppView extends Backbone.View
     @model.get('game').on 'newGame', ->
       @render()
     , @
+
+    @render()
 
   render: ->
     @$el.children().detach()
