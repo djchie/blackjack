@@ -6,13 +6,25 @@ class window.Hand extends Backbone.Collection
   hit: ->
     @add(@deck.pop())
     @last()
+    scores = @scores()
+    if scores[0] == 21 or scores[1] == 21
+      @trigger 'gameEnd', @
+    else if scores[0] > 21 and scores[1] > 21
+      @trigger 'gameEnd', @
 
   stand: -> @trigger 'stand', @
   
   dealerPlay: -> 
-    @forEach (card) -> 
+    _.each @models, (card) -> 
       card.flip() if not card.get('revealed')
-    scores = @scores
+    , @
+    scores = @scores()
+    while scores[0] < 17 || scores[1] < 17
+      @hit()
+      scores = @scores()
+    @trigger 'gameEnd', @ 
+    
+
       
 
   hasAce: -> @reduce (memo, card) ->
@@ -22,6 +34,10 @@ class window.Hand extends Backbone.Collection
   minScore: -> @reduce (score, card) ->
     score + if card.get 'revealed' then card.get 'value' else 0
   , 0
+
+  cardValuesSum: -> @reduce (val, card) ->
+    val += card.get 'value'
+  , 0  
 
   scores: ->
     # The scores are an array of potential scores.
